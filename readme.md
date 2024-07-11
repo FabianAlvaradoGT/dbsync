@@ -8,7 +8,6 @@ El script `DBSync` es una herramienta de automatización para respaldar y restau
 
 https://github.com/FabianAlvaradoGT/dbsync/assets/150682805/73c7d29f-9625-4a65-a90e-3efb71272988
 
-
 ## Requisitos
 
 Antes de ejecutar el script, asegúrate de tener lo siguiente instalado y configurado:
@@ -104,20 +103,20 @@ Edita el script DBSync.sh para configurar las variables de conexión a tu servid
 BACKUP_FILE="backup.bak"       # Nombre del archivo de respaldo
 
 # Variables Postgres
-AZURE_PG_HOST="your_sql_server_host"
-AZURE_PG_DB="your_database"
-AZURE_PG_USER="your_username"
-AZURE_PG_PASSWORD="your_password"
-LOCAL_PG_USER="postgres"        # Usuario local de PostgreSQL
-LOCAL_PG_CONTAINER="postgres"   # Nombre del contenedor Docker local (si se usa Docker)
+POSTGRES_HOST="your_sql_server_host"
+POSTGRES_DB="your_database"
+POSTGRES_USER="your_username"
+POSTGRES_PASSWORD="your_password"
+POSTGRES_LOCAL_USER="postgres"
+POSTGRES_LOCAL_CONTAINER="postgres"
 
 # Variables SQL Server
 SQLSERVER_HOST="your_sql_server_host"
 SQLSERVER_DB="your_database"
 SQLSERVER_USER="your_username"
 SQLSERVER_PASSWORD="your_password"
-LOCAL_SQLSERVER_USER="sa"      # Usuario local de SQL Server
-LOCAL_SQLSERVER_CONTAINER="sqlserver"  # Nombre del contenedor Docker local (si se usa Docker)
+SQLSERVER_LOCAL_USER="sa"
+SQLSERVER_LOCAL_CONTAINER="sqlserver"
 ```
 
 ## Detalles Importantes

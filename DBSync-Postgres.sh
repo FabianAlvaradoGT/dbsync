@@ -19,7 +19,7 @@ fi
 
 # Variables locales
 USO_DOCKER="$1"     # Indicar si se usa Docker o no (docker/no-docker)
-LOCAL_PG_DB="$2"    # Nombre de la base de datos local
+LOCAL_DB="$2"    # Nombre de la base de datos local
 
 # Función para mostrar los puntos suspensivos en movimiento
 mostrar_puntos_suspensivos() {
@@ -55,36 +55,36 @@ ejecutar_comando() {
 
 # Función para forzar la eliminación de la base de datos en Docker
 forzar_eliminacion_en_docker() {
-    docker exec -i $LOCAL_PG_CONTAINER psql -U $LOCAL_PG_USER -c "UPDATE pg_database SET datallowconn = 'false' WHERE datname = '$LOCAL_PG_DB';" >/dev/null
-    docker exec -i $LOCAL_PG_CONTAINER psql -U $LOCAL_PG_USER -c "SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = '$LOCAL_PG_DB';" >/dev/null
-    docker exec -i $LOCAL_PG_CONTAINER dropdb -U $LOCAL_PG_USER $LOCAL_PG_DB >/dev/null
+    docker exec -i $POSTGRES_LOCAL_CONTAINER psql -U $POSTGRES_LOCAL_USER -c "UPDATE pg_database SET datallowconn = 'false' WHERE datname = '$LOCAL_DB';" >/dev/null
+    docker exec -i $POSTGRES_LOCAL_CONTAINER psql -U $POSTGRES_LOCAL_USER -c "SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = '$LOCAL_DB';" >/dev/null
+    docker exec -i $POSTGRES_LOCAL_CONTAINER dropdb -U $POSTGRES_LOCAL_USER $LOCAL_DB >/dev/null
 }
 
 # Función para forzar la eliminación de la base de datos sin Docker
 forzar_eliminacion_sin_docker() {
-    psql -U $LOCAL_PG_USER -c "UPDATE pg_database SET datallowconn = 'false' WHERE datname = '$LOCAL_PG_DB';" >/dev/null
-    psql -U $LOCAL_PG_USER -c "SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = '$LOCAL_PG_DB';" >/dev/null
-    dropdb -U $LOCAL_PG_USER $LOCAL_PG_DB >/dev/null
+    psql -U $POSTGRES_LOCAL_USER -c "UPDATE pg_database SET datallowconn = 'false' WHERE datname = '$LOCAL_DB';" >/dev/null
+    psql -U $POSTGRES_LOCAL_USER -c "SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = '$LOCAL_DB';" >/dev/null
+    dropdb -U $POSTGRES_LOCAL_USER $LOCAL_DB >/dev/null
 }
 
 # Función para restaurar la base de datos en Docker
 restaurar_en_docker() {
-    ejecutar_comando "docker exec -e PGPASSWORD=$AZURE_PG_PASSWORD $LOCAL_PG_CONTAINER pg_dump -h $AZURE_PG_HOST -U $AZURE_PG_USER -d $AZURE_PG_DB > $BACKUP_FILE 2>/dev/null" "🎒 Iniciando el dump de la base de datos en Azure..."
+    ejecutar_comando "docker exec -e PGPASSWORD=$POSTGRES_PASSWORD $POSTGRES_LOCAL_CONTAINER pg_dump -h $POSTGRES_HOST -U $POSTGRES_USER -d $POSTGRES_DB > $BACKUP_FILE 2>/dev/null" "🎒 Iniciando el dump de la base de datos en Azure..."
     
-    docker exec -i $LOCAL_PG_CONTAINER psql -U $LOCAL_PG_USER -tc "SELECT 1 FROM pg_database WHERE datname = '$LOCAL_PG_DB'" | grep -q 1 && forzar_eliminacion_en_docker
+    docker exec -i $POSTGRES_LOCAL_CONTAINER psql -U $POSTGRES_LOCAL_USER -tc "SELECT 1 FROM pg_database WHERE datname = '$LOCAL_DB'" | grep -q 1 && forzar_eliminacion_en_docker
 
-    ejecutar_comando "docker exec -i $LOCAL_PG_CONTAINER createdb -U $LOCAL_PG_USER $LOCAL_PG_DB" "🛠️  Creando la base de datos local en Docker..."
-    ejecutar_comando "cat $BACKUP_FILE | docker exec -i $LOCAL_PG_CONTAINER psql -U $LOCAL_PG_USER -d $LOCAL_PG_DB 2>&1" "♻️  Restaurando el dump en la base de datos local en Docker..."
+    ejecutar_comando "docker exec -i $POSTGRES_LOCAL_CONTAINER createdb -U $POSTGRES_LOCAL_USER $LOCAL_DB" "🛠️  Creando la base de datos local en Docker..."
+    ejecutar_comando "cat $BACKUP_FILE | docker exec -i $POSTGRES_LOCAL_CONTAINER psql -U $POSTGRES_LOCAL_USER -d $LOCAL_DB 2>&1" "♻️  Restaurando el dump en la base de datos local en Docker..."
 }
 
 # Función para restaurar la base de datos sin Docker
 restaurar_sin_docker() {
-    ejecutar_comando "PGPASSWORD=$AZURE_PG_PASSWORD pg_dump -h $AZURE_PG_HOST -U $AZURE_PG_USER -d $AZURE_PG_DB > $BACKUP_FILE 2>/dev/null" "🎒 Iniciando el dump de la base de datos en Azure..."
+    ejecutar_comando "PGPASSWORD=$POSTGRES_PASSWORD pg_dump -h $POSTGRES_HOST -U $POSTGRES_USER -d $POSTGRES_DB > $BACKUP_FILE 2>/dev/null" "🎒 Iniciando el dump de la base de datos en Azure..."
     
-    psql -U $LOCAL_PG_USER -tc "SELECT 1 FROM pg_database WHERE datname = '$LOCAL_PG_DB'" | grep -q 1 && forzar_eliminacion_sin_docker
+    psql -U $POSTGRES_LOCAL_USER -tc "SELECT 1 FROM pg_database WHERE datname = '$LOCAL_DB'" | grep -q 1 && forzar_eliminacion_sin_docker
 
-    ejecutar_comando "createdb -U $LOCAL_PG_USER $LOCAL_PG_DB" "🛠️  Creando la base de datos local..."
-    ejecutar_comando "PGPASSWORD=$LOCAL_PG_PASSWORD psql -U $LOCAL_PG_USER -d $LOCAL_PG_DB < $BACKUP_FILE 2>&1" "♻️  Restaurando el dump en la base de datos local..."
+    ejecutar_comando "createdb -U $POSTGRES_LOCAL_USER $LOCAL_DB" "🛠️  Creando la base de datos local..."
+    ejecutar_comando "PGPASSWORD=$LOCAL_PG_PASSWORD psql -U $POSTGRES_LOCAL_USER -d $LOCAL_DB < $BACKUP_FILE 2>&1" "♻️  Restaurando el dump en la base de datos local..."
 }
 
 # Restaurar la base de datos según el método especificado
