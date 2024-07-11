@@ -4,6 +4,11 @@
 
 El script `DBSync` es una herramienta de automatización para respaldar y restaurar bases de datos de PostgreSQL y SQL Server, tanto en entornos Docker como no Docker. Este script facilita la replicación de bases de datos desde un servidor en la nube a un servidor local, manejando automáticamente la eliminación y creación de bases de datos, así como la restauración de los datos.
 
+## Demo
+
+https://github.com/FabianAlvaradoGT/dbsync/assets/150682805/73c7d29f-9625-4a65-a90e-3efb71272988
+
+
 ## Requisitos
 
 Antes de ejecutar el script, asegúrate de tener lo siguiente instalado y configurado:
