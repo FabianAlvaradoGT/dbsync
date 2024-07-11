@@ -1,14 +1,14 @@
-# DBSync
+# 🔄 DBSync
 
-## Descripción
+## 📕 Descripción
 
 El script `DBSync` es una herramienta de automatización para respaldar y restaurar bases de datos de PostgreSQL y SQL Server, tanto en entornos Docker como no Docker. Este script facilita la replicación de bases de datos desde un servidor en la nube a un servidor local, manejando automáticamente la eliminación y creación de bases de datos, así como la restauración de los datos.
 
-## Demo
+## 🚀 Demo
 
 https://github.com/FabianAlvaradoGT/dbsync/assets/150682805/73c7d29f-9625-4a65-a90e-3efb71272988
 
-## Requisitos
+## 📝 Requisitos
 
 Antes de ejecutar el script, asegúrate de tener lo siguiente instalado y configurado:
 
@@ -32,7 +32,7 @@ Antes de ejecutar el script, asegúrate de tener lo siguiente instalado y config
 
 - **Acceso a Azure SQL Server o PostgreSQL**: Credenciales de acceso y permisos necesarios para realizar operaciones de respaldo.
 
-## Instalación
+## 👨🏻‍💻 Instalación
 
 ### Instalación de PostgreSQL Tools en Linux
 
@@ -56,7 +56,7 @@ source ~/.bashrc
 
 Sigue las instrucciones de instalación en la página [oficial de Docker](https://docs.docker.com/engine/install/).
 
-## Uso
+## 🏃🏻‍♂️ Uso
 
 ### Ejecución del script
 
@@ -78,7 +78,7 @@ chmod +x DBSync-*.sh # DBSync-Postgres.sh o DBSync-SQLServer.sh
 - **<docker/no-docker>**: Especifica si la operación se realiza en un entorno Docker (docker) o no (no-docker).
 - **<nombre_base_datos_local>**: Nombre de la base de datos local donde se restaurarán los datos.
 
-## Ejemplo de Uso
+## 🧪 Ejemplo de Uso
 
 ### Sin Docker
 
@@ -92,7 +92,7 @@ chmod +x DBSync-*.sh # DBSync-Postgres.sh o DBSync-SQLServer.sh
 ./DBSync-*.sh docker my_local_db
 ```
 
-## Configuración
+## 🛠️ Configuración
 
 ### Variables de conexión
 
@@ -119,7 +119,7 @@ SQLSERVER_LOCAL_USER="sa"
 SQLSERVER_LOCAL_CONTAINER="sqlserver"
 ```
 
-## Detalles Importantes
+## ❗ Detalles Importantes
 
 - Seguridad: Asegúrate de que las credenciales y contraseñas no estén expuestas en el script si compartes el código.
 - Permisos: El usuario utilizado debe tener los permisos necesarios para realizar operaciones de respaldo y restauración.
